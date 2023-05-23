@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+::-webkit-scrollbar {
+    display: none;
+}
+    
+.sideNavItems{
+    font-family: 'Roboto', sans-serif;
+}
+.sideNavMainFont{
+    font-family: 'Just Another Hand', cursive;
+}

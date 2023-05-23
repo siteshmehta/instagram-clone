@@ -1,0 +1,33 @@
+{
+  "name": "instagram-clone",
+  "version": "1.0.0",
+  "description": "This is clone of Instagram website",
+  "scripts": {
+    "start": "npx parcel src/index.html",
+    "build": "parcel build src/index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@headlessui/react": "^1.7.14",
+    "@tanstack/react-query-devtools": "^4.29.7",
+    "axios": "^1.4.0",
+    "flowbite": "^1.6.5",
+    "flowbite-react": "^0.4.4",
+    "formik": "^2.2.9",
+    "parcel": "^2.8.3",
+    "react": "^18.2.0",
+    "react-avatar-editor": "^13.0.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.8.0",
+    "react-query": "^3.39.3",
+    "react-router-dom": "^6.11.1"
+  },
+  "devDependencies": {
+    "buffer": "^5.7.1",
+    "postcss": "^8.4.23",
+    "process": "^0.11.10",
+    "tailwindcss": "^3.3.2"
+  }
+}
