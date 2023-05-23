@@ -24,7 +24,11 @@ app.use("/",inputValidator);
 app.use("/",sanitizeInputs);
 
 
-
+app.get('/home',(req,res)=>{
+    res.json({
+        status : `App is running at PORT NO. ${PORT} `
+    })
+});
 app.use('/user', userRouter);
 app.use('/post', postRouter);
 
