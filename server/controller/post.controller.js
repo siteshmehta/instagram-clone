@@ -1,10 +1,8 @@
-import mongoose from "mongoose";
 import PostModel from "../models/post.model.js";
-import he from "he"; 
 import errorHandler from "./errorHandler.controller.js";
 import commentModel from "../models/comment.model.js";
 import { uploadFile } from "./s3.controller.js";
-import fs from "fs/promises";
+import {rimraf} from "rimraf";
 
 
 export async function getAllPost(req,res,next){
@@ -31,46 +29,44 @@ export async function getAllPost(req,res,next){
 }
 
 
-export async function createPost(req,res){
-    
-  const { title ,  location } = req.body;
-  try{
-
+export async function createPost(req, res) {
+  const { title, location } = req.body;
+  
+  try {
     const file = req.file;
-    const result = await uploadFile(file);
-    await fs.unlink(`/tmp/${file?.filename}`);
     
-    if(result.status === false ){
+    const result = await uploadFile(file);
+    
+
+    if (result.error) {
       res.status(500).json({
-        status : false,
-        message : "Unable to upload the post"
-      })
+        status: false,
+        message: "Unable to upload the post",
+      });
       return;
     }
-    
+
     const userId = req.currentUserInfo._id;
-    
-    let post = new PostModel({
-      uploadedBy : userId,
-      title ,
-      img_name : result?.awsImageName,
-      location
-    });
-    
-    if(!userId){
+
+    if (!userId) {
       throw new Error("Invalid user ID");
     }
+
+    const post = new PostModel({
+      uploadedBy: userId,
+      title,
+      img_name: result?.awsImageName,
+      location,
+    });
 
     await post.save();
 
     res.send({
-      data : post,
-      status : true
-    })
-
-
-  }catch(err){
-    errorHandler(err,res);
+      data: post,
+      status: true,
+    });
+  } catch (err) {
+    errorHandler(err, res);
   }
 }
 
