@@ -277,18 +277,3 @@ export async function validateUser(req,res){
       })
   }
 }
-
-// export async function fileUpload(req, res) {
-//   const file = req.file;
-//   console.log("START");
-//   const result = await uploadFile(file);
-//   await fs.unlink(`./uploads/${file?.filename}`);
-
-//   console.table(result)
-
-//   res.send({
-//     imagePath: `/images/${result.Key}`,
-//     status: true
-//   });
-
-// }
