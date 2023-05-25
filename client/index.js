@@ -3,11 +3,11 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 // Components
-import PostView from "./src/component/pages/post/ViewPost";
 import ViewPost from "./src/component/pages/post/ViewPost";
 import Login from "./src/component/pages/login";
 import Signup from "./src/component/pages/signup";
 import { PrivateRouteHandler } from "./src/component/PrivateRouteHandler";
+import AddPost from "./src/component/pages/post/AddPost";
 
 // configs
 import AppLayout from "./src/component/AppLayout";
@@ -28,11 +28,11 @@ const routerConfig = createBrowserRouter([
     children: [
       {
         path: "/p/:id",
-        element: <PostView />,
+        element: <ViewPost />,
       },
       {
         path: "/p/add_post",
-        element: <ViewPost />,
+        element: <AddPost />,
       },
     ],
   },

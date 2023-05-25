@@ -3,6 +3,9 @@ import PostModel from "../models/post.model.js";
 import he from "he"; 
 import errorHandler from "./errorHandler.controller.js";
 import commentModel from "../models/comment.model.js";
+import { uploadFile } from "./s3.controller.js";
+import fs from "fs/promises";
+
 
 export async function getAllPost(req,res,next){
      
@@ -14,7 +17,7 @@ export async function getAllPost(req,res,next){
       }).lean();
       
       posts.forEach(post => {
-        post.imgBase64 = he.decode(post.imgBase64);
+        post.img_url = `${process.env.IMAGE_URL}/${post.img_name}`
       });
       res.json({
         status : true ,
@@ -30,14 +33,27 @@ export async function getAllPost(req,res,next){
 
 export async function createPost(req,res){
     
-  const { title , imgBase64 , location } = req.body;
+  const { title ,  location } = req.body;
   try{
+
+    const file = req.file;
+    const result = await uploadFile(file);
+    await fs.unlink(`./uploads/${file?.filename}`);
+    
+    if(result.status === false ){
+      res.status(500).json({
+        status : false,
+        message : "Unable to upload the post"
+      })
+      return;
+    }
+    
     const userId = req.currentUserInfo._id;
     
     let post = new PostModel({
       uploadedBy : userId,
       title ,
-      imgBase64,
+      img_name : result?.awsImageName,
       location
     });
     
@@ -80,7 +96,7 @@ export async function viewPost(req,res){
       throw new Error("Post not found");
     }
     
-    post.imgBase64 = he.decode(post?.imgBase64);
+    post.img_url = `${process.env.IMAGE_URL}/${img_name}`;
     
     res.send({
       status : true,

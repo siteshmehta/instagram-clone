@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "server-app": "cd server && npm start",
+    "server-app": "cd server && npm run staging",
     "client-app": "cd client && npm start",
     "start": "concurrently \"npm run server-app\" \"npm run client-app\""
   },

@@ -8,6 +8,12 @@ import { config } from 'dotenv';
 import mongoose from "mongoose";
 import { inputValidator, sanitizeInputs } from "./middleware/inputValidator.js";
 import { authenticateToken } from "./middleware/jwtAuthenticator.js";
+import multer from "multer";
+const upload = multer({
+    dest: './uploads'
+});
+  
+
 config();
 
 const app = express();
@@ -31,7 +37,7 @@ app.get('/',(req,res)=>{
 });
 app.use('/user', userRouter);
 app.use('/post', postRouter);
-
+  
  
 
 mongoose.connect(process.env.DB_URI)

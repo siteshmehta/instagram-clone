@@ -48,7 +48,7 @@ export default function ViewPost() {
               >
                 {/* Main content lies here */}
                 <Dialog.Panel className="w-full  max-h-[90vh] max-w-min transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
-                  <div className="">
+                  <div className="flex flex-row h-[100%]">
                     {status === "loading" ? (
                       <div className="grid grid-cols-12 min-w-[70vw]">
                         <div className="col-span-7 mb-3 animate-pulse bg-gray-300 rounded-lg">
@@ -66,48 +66,33 @@ export default function ViewPost() {
                     ) : status === "error" ? (
                       "Unexpected error"
                     ) : (
-                      <div className="flex min-h-80vh  justify-center">
-                        <div className="w-fit min-w-[500px] min-h-full">
+                      <div className="grid grid-cols-12 min-w-[70vw]">
+                        <div className="col-span-7">
                           <img
-                            className="object-contain h-full m-auto"
-                            src={post?.img_url}
+                            className="object-contain h-full"
+                            src={post?.imgBase64}
                           />
                         </div>
-                        <div className=" bg-slate-100 relative w-[700px]">
+                        <div className="col-span-5 w-full bg-slate-100 overflow-y-scroll h-[90vh]">
 
                           
-                          {/* <div className="flex flex-col"> */}
-
-                                <div className="absolute top-0 min-h-[5%] bg-slate-100 w-full border-b-2 z-10">
-                                    <div className="grid grid-cols-12 gap-0">
-                                          <div className="col-span-1 min-h-10">
-                                              <img src="https://cdn1.iconfinder.com/data/icons/colored-social-media-set-volume-1/512/instagram-256.png" className="objec-fit p-2" />
-                                          </div>
-                                          <div className="col-span-2 my-auto">
-                                            Ajay
-                                          </div>
-                                    </div>
-                                    {/* Profile section */}
+                          <div className="grid grid-rows-3">
+                                <div className="h-10 fixed bg-gray-500 w-full border-b-2">
+                                    Profile section
                                 </div>
-                                <div className="absolute top-[5%] pb-[30%] h-full w-full overflow-y-scroll">
-                                    {Array.from({ length: 30 }).map((_, index) => {
-                                        return <UserComment key={index} id={index} />;
+                                <div className="mt-10">
+                                    {Array.from({ length: 20 }).map((_, index) => {
+                                        return <UserComment key={index} />;
                                     })}
                                  </div> 
-                                  
-
-                                 <div className="absolute bottom-0 w-full min-h-[15%] flex flex-row border-t-2 bg-slate-100 z-10">
-                                  <div className="grow">
-                                    <textarea className="w-full border-0 bg-slate-100" placeholder="Add a comment.."></textarea>
-                                  </div>
-                                  <div className="p-2 m-auto">
-                                    <button className="rounded border-2 bg-blue-500" type="button">
-                                      Submit
-                                    </button>
-                                  </div>
-                                </div> 
-
-                          {/* </div> */}
+                                 <div className="fixed bottom-0 h-20 bg-gray-500 border  w-[100%] flex">
+                                      {/* <div className=" bg-red-400 h-20" > */}
+                                        {/* <textarea rows={2} className=""></textarea> */}
+                                        <div className="bg-yellow-200 h-auto grow"></div>
+                                        <button className="rounded border-2" type="button">Submit</button>
+                                      {/* </div> */}
+                                 </div>
+                          </div>
                           
                         </div>
                       </div>

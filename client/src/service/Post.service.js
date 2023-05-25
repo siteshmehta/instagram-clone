@@ -31,10 +31,8 @@ export function useViewPost( post_id ) {
         const finalResponse = response.data;
         let finalData = [];
         if (finalResponse?.status === true) {
-          finalData = finalResponse?.data;
-          finalData['imgBase64'] = `data:image/png;base64,${finalData?.imgBase64}`;
+          return finalData;
         }
-        return finalData;
       },
       refetchOnWindowFocus : false
   });

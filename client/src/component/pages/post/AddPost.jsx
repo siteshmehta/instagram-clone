@@ -16,39 +16,51 @@ export default function AddPost() {
     setUploadFileData(file);
   };
 
-  const [base64Img,setBase64Img] = useState("");
+  
   const navigator = useNavigate();
   const editorRef = useRef(null);
 
   const formHandler = (event) => {
     event.preventDefault();
-    const formFinalData = {};
-    formFinalData['title'] = postTitle;
-    formFinalData['location'] = "NOIDA";
+    const formFinalData = new FormData();
+    formFinalData.append('title', postTitle);
+    formFinalData.append('location', 'NOIDA');
 
     if (editorRef.current) {
       const canvas = editorRef.current.getImage();
   
       if (canvas) {
         const dataURL = canvas.toDataURL();
-        const base64Data = dataURL.split(',')[1];
-        formFinalData['imgBase64'] = base64Data;
+
+        const base64Data = dataURL.split(',')[1]; 
+
+          // Convert base64 data to binary image data
+          const imageData = Buffer.from(base64Data, 'base64');
+          const imageBlob = new Blob([imageData], { type: 'image/jpg' });
+          formFinalData.append('img', imageBlob, 'image.jpg');
 
       }
     }
 
+    console.log(formFinalData);
+    
+    axiosClient.post(`/post/upload`, formFinalData, {
+      headers: {
+        'Content-Type': 'multipart/form-data' }
+      }).then(response=>{
+        const finalResponse = response.data;  // AJAX body data comes under the data attr.      
+        if(finalResponse?.status === true){
+          alert("Post uploaded");
+        }
+      }).catch((err)=>{
+        alert("Fail to upload");
+      }).finally(()=>{
+        navigator("/");
+      });
+  };
 
-    axiosClient.post(`/post/upload`, formFinalData).then(response=>{
-        const finalResponse = response.data;  // AJAX body data comes under the data attr.
-        
-        
-        console.log(finalResponse);
-        return finalResponse;
-    });
-
-
-  }
   
+
 
   return (
     <>
@@ -93,7 +105,7 @@ export default function AddPost() {
                       {
 
                         uploadFileData == '' ? 
-                        <input type="file" onChange={handleFileUpload} accept=".jpg" className='' /> :
+                        <input type="file" onChange={handleFileUpload} accept=".jpg,.png,.jpeg" className='' /> :
                         <>
                           <form onSubmit={formHandler}>
                             <textarea type='text' placeholder='Enter the title' className='border-1 rounded-md w-full' rows="3" 

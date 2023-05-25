@@ -3,7 +3,6 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 const PostFeed = (props) => {
   const navigate = useNavigate();
   const [liked, setLiked] = useState(false);
@@ -12,7 +11,7 @@ const PostFeed = (props) => {
     _id: post_id,
     uploadedBy,
     title,
-    imgBase64,
+    img_url,
     like_count = 0
   } = props["data"];
 
@@ -34,7 +33,7 @@ const PostFeed = (props) => {
 
         <div className="w-full lg:h-full overflow-hidden rounded-md">
           <img
-            src={`data:image/png;base64,${imgBase64}`}
+            src={`${img_url}`}
             className="object-contain h-full"
             onDoubleClick={() => {
               setLiked(!liked);

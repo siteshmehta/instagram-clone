@@ -1,8 +1,12 @@
 import UserModel from "../models/user.model.js"; 
+import AWS from "aws-sdk";
 import bcrypt from 'bcrypt';
 import { generateToken } from "./autenticator.controller.js";
-import mongoose from "mongoose";
+import { uploadFile } from "./s3.controller.js";
 let saltRounds = 8;
+import fs from "fs/promises";
+
+
 
 export async function getStories(req,res,next){
     const stories = [
@@ -273,3 +277,18 @@ export async function validateUser(req,res){
       })
   }
 }
+
+// export async function fileUpload(req, res) {
+//   const file = req.file;
+//   console.log("START");
+//   const result = await uploadFile(file);
+//   await fs.unlink(`./uploads/${file?.filename}`);
+
+//   console.table(result)
+
+//   res.send({
+//     imagePath: `/images/${result.Key}`,
+//     status: true
+//   });
+
+// }
