@@ -32,7 +32,7 @@ app.use("/",sanitizeInputs);
 
 app.get('/',(req,res)=>{
     res.json({
-        status : `App is running at PORT NO. ${PORT} `
+        status : `App is running at PORT NO. ${PORT} ..........`
     })
 });
 app.use('/user', userRouter);
