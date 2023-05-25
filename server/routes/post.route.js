@@ -1,8 +1,20 @@
 import express from "express";
 import { addComment, createPost, getAllPost, viewPost } from "../controller/post.controller.js";
 import multer from "multer";
+
+
+
+const storage = process.env.ENVIROMENT == 'production' ? 
+multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '/tmp')
+  }
+}) : 
+multer.memoryStorage();
+
+
 const upload = multer({
-  storage: multer.memoryStorage(),
+  storage: storage
 })
 
 const app = express();
