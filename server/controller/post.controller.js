@@ -38,7 +38,7 @@ export async function createPost(req,res){
 
     const file = req.file;
     const result = await uploadFile(file);
-    await fs.unlink(`./tmp/${file?.filename}`);
+    await fs.unlink(`/tmp/${file?.filename}`);
     
     if(result.status === false ){
       res.status(500).json({
