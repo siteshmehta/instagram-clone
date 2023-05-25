@@ -3,5 +3,4 @@ dist
 .parcel-cache
 .env
 .vscode
-**/uploads/*
 aws_config.json
