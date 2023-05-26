@@ -7,7 +7,7 @@ export function useListOfPost(){
   const { status , data : posts } = useQuery({
     queryKey : ['post','list'],
     queryFn : async function () {
-      return axiosClient.get(`/post/list`).then((response) => {
+      return axiosClient.get(`/post/list/`).then((response) => {
         const finalResponse = response.data; // AJAX body data comes under the data attr.
         let finalData = [];
         if (finalResponse?.status === true) {
