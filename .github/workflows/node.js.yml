@@ -27,7 +27,14 @@ jobs:
     - run: npm ci
     - run: cd server
     - run: touch .env
-    - run: for secret in "${secrets[@]}"; do
-            echo "$secret" >> .env
-          done
+    - run: echo "DB_URI=${{ secrets.DB_URI }}" >> .env
+    - run: echo "JWT_TOKEN=${{ secrets.JWT_TOKEN }}" >> .env
+    - run: echo "PUBLIC_PATH=${{ secrets.PUBLIC_PATH }}" >> .env
+    - run: echo "MAX_FILE_UPLOAD_LIMIT=${{ secrets.MAX_FILE_UPLOAD_LIMIT }}" >> .env
+    - run: echo "AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }}" >> .env
+    - run: echo "AWS_BUCKET_REGION=${{ secrets.AWS_BUCKET_REGION }}" >> .env
+    - run: echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env
+    - run: echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env
+    - run: echo "IMAGE_URL=${{ secrets.IMAGE_URL }}" >> .env
+    - run: echo "ENVIROMENT=${{ secrets.ENVIROMENT }}" >> .env
     - run: npm install && pm2 restart index.js
