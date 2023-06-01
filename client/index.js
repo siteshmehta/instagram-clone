@@ -12,7 +12,8 @@ import AddPost from "./src/component/pages/post/AddPost";
 // configs
 import AppLayout from "./src/component/AppLayout";
 
-console.log(process.env.REACT_APP_API_BASE_URL)
+
+
 const routerConfig = createBrowserRouter([
   {
     path: "/u/login",

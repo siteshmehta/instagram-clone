@@ -1,14 +1,28 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment } from "react";
+import { Fragment,  useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import UserComment from "./comment/UserComment";
-import { useViewPost } from "../../../service/Post.service";
+import { addComment, useViewPost } from "../../../service/Post.service";
 
 export default function ViewPost() {
+
+  const [comment,setComment] = useState("");
   const navigator = useNavigate();
   const { id: postId } = useParams();
   const { status, data: post } = useViewPost(postId);
+
+  
+  const submitComment = function( ){ 
+
+    const commentDetails = {
+      comment ,
+      postId 
+    };
+    
+    addComment(commentDetails);
+    navigator(`/p/${postId}`);
+  }
 
   return (
     <>
@@ -66,51 +80,57 @@ export default function ViewPost() {
                     ) : status === "error" ? (
                       "Unexpected error"
                     ) : (
-                      <div className="flex min-h-80vh  justify-center">
-                        <div className="w-fit min-w-[500px] min-h-full">
+                      <> 
+                      
+                      <div className="flex justify-center h-[90vh]">
+                        <div className="w-fit min-w-[500px] my-auto">
                           <img
-                            className="object-contain h-full m-auto"
+                            className="object-contain m-auto"
                             src={post?.img_url}
                           />
                         </div>
-                        <div className=" bg-slate-100 relative w-[700px]">
 
-                          
-                          {/* <div className="flex flex-col"> */}
+                        <div className=" bg-slate-100 min-w-[500px]">
 
-                                <div className="absolute top-0 min-h-[5%] bg-slate-100 w-full border-b-2 z-10">
-                                    <div className="grid grid-cols-12 gap-0">
-                                          <div className="col-span-1 min-h-10">
-                                              <img src="https://cdn1.iconfinder.com/data/icons/colored-social-media-set-volume-1/512/instagram-256.png" className="objec-fit p-2" />
+                                <div className="fixed top-0 h-[50px] bg-slate-100 border-b-2 z-10 " style={{width:"-webkit-fill-available"}}>
+                                    <div className="grid grid-cols-11 gap-0">
+                                          <div className="h-[40px] w-[50px] m-0">
+                                              <img src="https://cdn1.iconfinder.com/data/icons/colored-social-media-set-volume-1/512/instagram-256.png" className="objec-contain p-2" />
                                           </div>
-                                          <div className="col-span-2 my-auto">
-                                            Ajay
+                                          <div className="ml-3 col-span-10 my-auto">
+                                            {post?.uploadedBy?.name}
                                           </div>
                                     </div>
                                     {/* Profile section */}
                                 </div>
-                                <div className="absolute top-[5%] pb-[30%] h-full w-full overflow-y-scroll">
-                                    {Array.from({ length: 30 }).map((_, index) => {
-                                        return <UserComment key={index} id={index} />;
+
+                                <div className="mt-[50px] pb-[50%] h-full w-full overflow-y-scroll">
+                                    {post['commentArr'].map((commentData) => {
+                                        return <UserComment key={commentData?._id}  comment={commentData} />;
                                     })}
-                                 </div> 
-                                  
+                                 </div>
+                                 
+                                 <div className="fixed bottom-0 flex flex-row border-t-2 bg-slate-100 z-10" style={{width:"-webkit-fill-available"}}>
+                                  {/* <form ref={commentFormElem}> */}
+                                      <div className="grow">
+                                        <textarea className="w-full border-0 bg-slate-100" placeholder="Add a comment.." value={comment}
+                                          onChange={(values)=>{
+                                            setComment(values.target.value)
+                                          }}
+                                        ></textarea>
+                                      </div>
+                                      <div className="p-2 m-auto">
+                                        <p className="text-sky-700 font-semibold cursor-pointer" onClick={submitComment}>
+                                          Post
+                                        </p>
+                                      </div>
+                                    {/* </form> */}
+                                  </div> 
 
-                                 <div className="absolute bottom-0 w-full min-h-[15%] flex flex-row border-t-2 bg-slate-100 z-10">
-                                  <div className="grow">
-                                    <textarea className="w-full border-0 bg-slate-100" placeholder="Add a comment.."></textarea>
-                                  </div>
-                                  <div className="p-2 m-auto">
-                                    <button className="rounded border-2 bg-blue-500" type="button">
-                                      Submit
-                                    </button>
-                                  </div>
-                                </div> 
-
-                          {/* </div> */}
                           
                         </div>
                       </div>
+                      </>
                     )}
                   </div>
                 </Dialog.Panel>

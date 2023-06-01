@@ -1,5 +1,5 @@
 const UserComment  = (props) => {
-    
+    let {  text , commentedBy : { name } } = props['comment'];
     return (
         <>
             <div className="flex flex-row justify-start space-x-2 border m-2">
@@ -8,8 +8,8 @@ const UserComment  = (props) => {
                     </div>
                 {/* </div> */}
                 <div className="">
-                    <span className="font-semibold mr-2">Aman</span> 
-                    <span className="font-thin">This is {props?.id+1} comment on my post .</span>
+                    <span className="font-semibold mr-2">{name}</span> 
+                    <span className="font-thin">{text}</span>
                 </div>
             </div>
         </>

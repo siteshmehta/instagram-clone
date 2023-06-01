@@ -2,24 +2,27 @@ import PostModel from "../models/post.model.js";
 import errorHandler from "./errorHandler.controller.js";
 import commentModel from "../models/comment.model.js";
 import { uploadFile } from "./s3.controller.js";
-import {rimraf} from "rimraf";
 
 
 export async function getAllPost(req,res,next){
      
     try{
 
-      const posts = await PostModel.find().populate({
-        path: 'uploadedBy',
-        select: '_id name username'
-      }).lean();
-      
-      posts.forEach(post => {
-        post.img_url = `${process.env.IMAGE_URL}/${post.img_name}`
-      });
+      const posts = await PostModel.
+      find().
+      populate({path: 'uploadedBy',select: '_id name username'}).
+      populate('totalComment').
+      lean();
+
+      const finalPost = posts.map((post)=>{
+        post['img_url'] = `${process.env.IMAGE_URL}/${post?.img_name}`;
+        return post;
+      })
+
+ 
       res.json({
         status : true ,
-        data : posts
+        data : finalPost
       });
 
 
@@ -76,23 +79,19 @@ export async function viewPost(req,res){
     const { id : post_id } = req.params;
     
 
-    const post = await PostModel.findById(post_id).populate({
+    const post = await PostModel.findOne({_id:post_id}).populate({
       path: 'uploadedBy',
-      select: '_id name username'
+      model: 'Users',
+      select: 'name username',
     }).lean();
-
-    const comment = await commentModel.findById(post_id).populate({
-      path: 'uploadedBy',
-      select: '_id name username'
-    }).lean();
-
     
     
     if(!post){
       throw new Error("Post not found");
     }
     
-    post.img_url = `${process.env.IMAGE_URL}/${img_name}`;
+    // console.log(post);
+    post.img_url = `${process.env.IMAGE_URL}/${post.img_name}`;
     
     res.send({
       status : true,

@@ -12,7 +12,8 @@ const PostFeed = (props) => {
     uploadedBy,
     title,
     img_url,
-    like_count = 0
+    like_count = 0,
+    totalComment = 0
   } = props["data"];
 
   return (
@@ -76,9 +77,9 @@ const PostFeed = (props) => {
         </div>
 
         <span className="font-thin text-gray-400 text-sm">
-          View all comments
+          {totalComment !=0 && `View all ${totalComment} comments` }
         </span>
-        <span className="text-sm">Add a comment..</span>
+        <span className="text-sm mt-1">Add a comment..</span>
       </div>
     </>
   );
