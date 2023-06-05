@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools"
 import { Outlet } from "react-router-dom";
 import Home from "./pages/home/Home";
 import LeftSideNav from "./LeftSideNav";
@@ -25,6 +26,7 @@ export default function AppLayout () {
               <Outlet />
             </section>
           </div>
+          <ReactQueryDevtools initialIsOpen={false} position="bottom-left"/>
         </QueryClientProvider>
       </React.StrictMode>
     );

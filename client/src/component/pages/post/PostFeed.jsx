@@ -3,18 +3,41 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { updatePostLike } from "../../../service/Post.service";
+
+
+
 const PostFeed = (props) => {
   const navigate = useNavigate();
-  const [liked, setLiked] = useState(false);
 
   let {
     _id: post_id,
     uploadedBy,
     title,
     img_url,
-    like_count = 0,
-    totalComment = 0
+    totalLike: totalLikes,
+    totalComment = 0,
+    isPostLiked
   } = props["data"];
+
+  totalLikes = Number(totalLikes);
+
+  const [liked, setLiked] = useState(isPostLiked);
+  const [totalLike, setTotalLike] = useState(totalLikes);
+
+  const updateLikes = async () => {
+    try {
+      const likeResponse = await updatePostLike(post_id);
+      if (likeResponse.status === true) {
+        setLiked(!liked);
+        liked === true ? setTotalLike(totalLike - 1) : setTotalLike(totalLike + 1);
+      }
+    } catch (err) {
+      console.log({ err })
+    }
+  }
+
+
 
   return (
     <>
@@ -37,7 +60,7 @@ const PostFeed = (props) => {
             src={`${img_url}`}
             className="object-contain h-full"
             onDoubleClick={() => {
-              setLiked(!liked);
+              updateLikes()
             }}
           />
         </div>
@@ -47,14 +70,14 @@ const PostFeed = (props) => {
             <AiFillHeart
               className="text-xl text-red-500 hover:cursor-pointer"
               onClick={() => {
-                setLiked(!liked);
+                updateLikes()
               }}
             />
           ) : (
             <AiOutlineHeart
               className="text-xl text-black hover:cursor-pointer"
               onClick={() => {
-                setLiked(!liked);
+                updateLikes()
               }}
             />
           )}
@@ -68,7 +91,7 @@ const PostFeed = (props) => {
         </div>
 
         <span className="font-semibold text-sm">
-          {like_count} {like_count > 1 ? "Likes" : "Like"}
+          {totalLike} {totalLike > 1 ? "Likes" : "Like"}
         </span>
 
         <div className="flex text-sm">
@@ -77,7 +100,7 @@ const PostFeed = (props) => {
         </div>
 
         <span className="font-thin text-gray-400 text-sm">
-          {totalComment !=0 && `View all ${totalComment} comments` }
+          {totalComment != 0 && `View all ${totalComment} comments`}
         </span>
         <span className="text-sm mt-1">Add a comment..</span>
       </div>

@@ -12,8 +12,6 @@ import AddPost from "./src/component/pages/post/AddPost";
 // configs
 import AppLayout from "./src/component/AppLayout";
 
-
-
 const routerConfig = createBrowserRouter([
   {
     path: "/u/login",

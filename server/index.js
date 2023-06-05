@@ -29,7 +29,6 @@ app.use("/",authenticateToken);
 app.use("/",inputValidator);
 app.use("/",sanitizeInputs);
 
-
 app.get('/',(req,res)=>{
     res.json({
         status : `App is running at PORT NO. ${PORT} ..........`
@@ -45,3 +44,4 @@ mongoose.connect(process.env.DB_URI)
 .catch((error) => {
     console.log(`Unable to connect ${error}`);
 });
+

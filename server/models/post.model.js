@@ -19,29 +19,15 @@ const PostSchema = new mongoose.Schema({
     foreignField: 'postId',
     count: true,
   });
-  
 
-  //find the list of comment
-  PostSchema.virtual('commentArr', {
-    ref: 'Comments',
+
+  //find the total number of like on the post
+  PostSchema.virtual('totalLike', {
+    ref: 'Likes',
     localField: '_id',
     foreignField: 'postId',
+    count: true,
   });
-
-
-  //find who commented on the post[user detail]
-  PostSchema.pre('findOne', function (next) {
-    this.populate({
-      path: 'commentArr',
-      populate: {
-        path: 'commentedBy',
-        model: 'Users',
-        select: 'name username',
-      },
-    });
-    next();
-  });
-  
 
 
   const Post = mongoose.model("Posts", PostSchema);

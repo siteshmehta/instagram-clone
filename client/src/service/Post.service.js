@@ -1,62 +1,90 @@
-import { useQuery } from "react-query";
+import { useInfiniteQuery, useQuery } from "react-query";
 import axiosClient from "./axiosClient.service";
-import { useNavigate } from "react-router-dom";
 
 
 
-export function useListOfPost(){
-  const { status , data : posts } = useQuery({
-    queryKey : ['post','list'],
-    queryFn : async function () {
-      return axiosClient.get(`/post/list`).then((response) => {
-        const finalResponse = response.data; // AJAX body data comes under the data attr.
-        let finalData = [];
-        if (finalResponse?.status === true) {
-          finalData = finalResponse?.data;
-        }
-        return finalData;
-      });
+
+export function useListOfPost() {
+
+  const { data: responseData, fetchNextPage, isFetching, isIdle, status, hasNextPage } = useInfiniteQuery({
+    queryKey: ['posts', 'list'],
+    queryFn: async ({ pageParam = 1 }) => {
+      console.log({ params: pageParam });
+      try {
+        const response = await axiosClient.get(`/post/list?_page=${pageParam}`);
+        return response?.data;
+      } catch (error) {
+        throw new Error('Failed to fetch posts');
+      }
     },
-    staleTime : 1000 * 4,
-    refetchOnWindowFocus : false
-  });
+    getNextPageParam: (lastPage) => {
+      return lastPage?.hasNextPage === true ? lastPage.NextPage : undefined; //if there is next page then return the next page number e.g. if current query staring has page value as 1 then return 2.
+    },
+    keepPreviousData: true,
+    refetchOnWindowFocus: false,
+  }
+  );
 
-  return { status , posts};
+  return { responseData, fetchNextPage, isFetching, isIdle, status, hasNextPage }; // hasNextPage is required to check if there is more page to fetch or not .. it helps us to find the last data of the API.
+
 }
 
-export function useViewPost( post_id ) {
+export function useViewPost(post_id) {
   const { status, data } = useQuery({
-      queryKey : ['post',post_id],
-      queryFn : async function () {
-        const response = await axiosClient.get(`/post/${post_id}`);
-        const finalResponse = response.data;
-        
-        if (finalResponse?.status === true) {
-          return finalResponse?.data;
-        }
-      },
-      refetchOnWindowFocus : false
+    queryKey: ['post', post_id],
+    queryFn: async function () {
+      const response = await axiosClient.get(`/post/${post_id}`);
+      const finalResponse = response.data;
+
+      if (finalResponse?.status === true) {
+        return finalResponse?.data;
+      }
+    },
+    refetchOnWindowFocus: false
   });
   return { status, data };
 }
 
-export function addComment( commentDetails ){
- 
-  const { postId , comment } = commentDetails;
+
+export function useViewPostComment(post_id) {
+
+  const { status: commentStatus, data: comments } = useQuery({
+    queryKey: ['post', post_id, 'comment'],
+    queryFn: async function () {
+      const response = await axiosClient.get(`/post/${post_id}/comment`);
+      const finalResponse = response.data;
+
+      if (finalResponse?.status === true) {
+        return finalResponse?.data;
+      }
+    },
+    refetchOnWindowFocus: false,
+    enabled: !!post_id, // The query will not execute until the userId exists
+  })
+
+  return { commentStatus, comments };
+}
+
+
+export async function addComment(commentDetails) {
+
+  const { postId, comment } = commentDetails;
   const formFinalData = {
-    postId ,
-    text : comment
+    text: comment
   };
 
-  axiosClient.post(`/post/comment`, formFinalData).then(response=>{
+  return axiosClient.post(`/post/${postId}/comment`, formFinalData).then(response => {
     const finalResponse = response.data;  // AJAX body data comes under the data attr.      
-    if(finalResponse?.status === true){
-      //post added successfully
-    }
-  }).catch((err)=>{
+    // console.log({finalResponse})
+    return finalResponse;
+  }).catch((err) => {
     alert("Fail to add comment");
-  }).finally(()=>{
-    
   });
-  
+
+}
+
+export async function updatePostLike(post_id) {
+  return await axiosClient.put(`/post/${post_id}/like`).then((response) => response.data).catch(err => {
+    alert("Fail to like the post");
+  })
 }

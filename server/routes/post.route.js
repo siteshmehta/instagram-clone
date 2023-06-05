@@ -1,5 +1,5 @@
 import express from "express";
-import { addComment, createPost, getAllPost, viewPost } from "../controller/post.controller.js";
+import { addComment, createPost, getAllPost, getCommentByPostId, updatePostLike, viewPost } from "../controller/post.controller.js";
 import multer from "multer";
 
 
@@ -20,10 +20,18 @@ const upload = multer({
 const app = express();
 
 
+//POST SECTION
 app.get('/list',getAllPost);
+app.post('/add', upload.single("img") , createPost);  
 app.get('/:id',viewPost);
-app.post('/comment',addComment);
-app.post('/upload', upload.single("img") , createPost);
 
 
-export default app;
+//COMMENT SECTION
+app.get('/:id/comment',getCommentByPostId);
+app.post('/:id/comment',addComment);
+
+
+//LIKE SECTION
+app.put('/:id/like',updatePostLike);
+
+export default app; 
